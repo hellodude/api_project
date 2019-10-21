@@ -50,3 +50,13 @@ function deleteDirector(id){
     return pool.query(query)
 }
 module.exports.deleteDirector = deleteDirector
+
+function searchId(id){
+    const query = {
+        text:'SELECT EXISTS(SELECT id FROM movies WHERE id = $1)',
+        values:[id]
+    }
+
+    return pool.query(query)
+}
+module.exports.searchId = searchId

@@ -1,6 +1,7 @@
 
 const express = require('express')
 const app = express();
+const logger = require('./utils/logger')
 const movies =require('./entities/movies')
 const directors = require('./entities/directors')
 app.use(express.json())
@@ -10,6 +11,17 @@ const routesMovies = require('./routes/moviesroutes.js')
 
 
 app.use('/api/directors',routesDirector)
+
+app.use('/api/movies',routesMovies)
+
+app.use(function(err,req,res,next){
+
+    res.status(422).send({error:err.message})
+})
+
+
+const port = process.env.PORT || 3001
+app.listen(port,()=>logger.info(`listening on port ${port}...`))
 
 
 // app.route('/api/directors').get((req,res)=>{ 
@@ -45,7 +57,7 @@ app.use('/api/directors',routesDirector)
 
 
 // -----movies
-app.use('/api/movies',routesMovies)
+
 // app.get('/api/movies',(req,res)=>{
 //     movies.getAllMovies().then(resp => res.send(resp.rows))
 // })
@@ -75,6 +87,3 @@ app.use('/api/movies',routesMovies)
 //     movies.deleteMovie(req.params.movieId)
 //        .then(resp => res.send(resp))
 //    })
-
-const port = process.env.PORT || 3001
-app.listen(port,()=>console.log(`listening on port ${port}...`))
